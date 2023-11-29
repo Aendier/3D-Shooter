@@ -15,12 +15,17 @@ public class Player : LivingEntity
     //枪械控制器
     GunController gunController;
     public Crosshairs crossHair;
-    protected override void Start()
+    private void Awake()
     {
-        base.Start();
         controller = GetComponent<PlayerController>();
         gunController = GetComponent<GunController>();
         viewCamera = Camera.main;
+        FindObjectOfType<Spawner>().OnNewWave += OnNewWave;
+    }
+    protected override void Start()
+    {
+        base.Start();
+
     }
 
     void Update()
@@ -46,6 +51,9 @@ public class Player : LivingEntity
                 crossHair.gameObject.SetActive(true);
                 crossHair.transform.position = point;
                 crossHair.DetectTargets(ray);
+                if(((new Vector2(point.x, point.z) - new Vector2(transform.position.x, transform.position.z)).magnitude) > 0.7f){
+                    gunController.Aim(point);
+                }
             }
         }
 
@@ -58,5 +66,16 @@ public class Player : LivingEntity
         {
             gunController.OnTriggerRelease();
         }
+        
+        //换弹
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            gunController.Reload();
+        }
+    }
+    private void OnNewWave(int waveNumber)
+    {
+        health = startingHealth;
+        gunController.EquipGun(waveNumber - 1);
     }
 }

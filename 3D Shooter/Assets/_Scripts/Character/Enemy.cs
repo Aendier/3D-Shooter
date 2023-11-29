@@ -151,7 +151,7 @@ public class Enemy : LivingEntity
                 hasAppliedDamage = true;
                 targetEntity.TakeDamage(damage);
             }
-
+            
             percent += Time.deltaTime * attackSpeed;
 
             float interpolation = (-Mathf.Pow(percent, 2) + percent) * 4;

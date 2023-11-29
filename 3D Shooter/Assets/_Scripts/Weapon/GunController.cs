@@ -6,8 +6,8 @@ public class GunController : MonoBehaviour
 {
     //武器的位置
     public Transform weaponHold;
-    //开始的武器
-    public Gun startingGun;
+    //武器库
+    public Gun[] allGuns;
     //当前武器
     Gun equippedGun;
 
@@ -21,12 +21,7 @@ public class GunController : MonoBehaviour
 
     void Start()
     {
-        //如果开始的武器不为空
-        if(startingGun != null)
-        {
-            //装备设置好的开始武器
-            EquipGun(startingGun);
-        }
+
     }
 
     //装备武器
@@ -42,6 +37,10 @@ public class GunController : MonoBehaviour
         equippedGun = Instantiate(gunToEquip, weaponHold.position, weaponHold.rotation);
         //设置武器的父物体为weaponHold
         equippedGun.transform.parent = weaponHold;
+    }    
+    public void EquipGun(int gunNumber)
+    {
+        EquipGun(allGuns[gunNumber]);
     }
 
     //射击
@@ -50,7 +49,7 @@ public class GunController : MonoBehaviour
         //如果当前武器不为空
         if(equippedGun != null)
         {
-            //调用武器的射击函数
+            //调用武器的按下扳机函数
             equippedGun.OnTriggerHold();
         }
     }    //射击
@@ -59,10 +58,27 @@ public class GunController : MonoBehaviour
         //如果当前武器不为空
         if(equippedGun != null)
         {
-            //调用武器的射击函数
+            //调用武器的松开扳机函数
             equippedGun.OnTriggerRelease();
         }
     }
 
+    public void Aim(Vector3 aimPoint)
+    {
+        //如果当前武器不为空
+        if(equippedGun != null)
+        {
+            //调用武器的瞄准函数
+            equippedGun.Aim(aimPoint);
+        }
+    }
+
+    public void Reload()
+    {
+        if (equippedGun != null)
+        {
+            equippedGun.Reload();
+        }
+    }
 
 }
